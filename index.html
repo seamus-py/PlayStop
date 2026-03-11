@@ -1,1 +1,578 @@
-<a href="/PlayStop Design Documentation.pdf" target="_blank">View PDF</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlayStop — Empowering Every Ear</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ice: #e8f4f8;
+      --navy: #0a1628;
+      --red: #c0392b;
+      --silver: #b8cdd8;
+      --glass: rgba(255,255,255,0.06);
+      --glass-border: rgba(255,255,255,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--navy);
+      color: var(--ice);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ─────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 6rem 8vw 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* rink-ice grid lines */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(184,205,216,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(184,205,216,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    /* red crease arc */
+    .hero::after {
+      content: '';
+      position: absolute;
+      right: -200px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      border: 2px solid rgba(192,57,43,0.18);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.2s ease forwards;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4.5rem, 12vw, 10rem);
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      color: var(--ice);
+      margin-bottom: 0.4rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.35s ease forwards;
+    }
+
+    .hero-title span {
+      color: var(--red);
+      display: block;
+    }
+
+    .hero-sub {
+      max-width: 540px;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--silver);
+      margin-top: 1.8rem;
+      margin-bottom: 2.8rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.5s ease forwards;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.65s ease forwards;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      border-radius: 3px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      background: var(--red);
+      color: #fff;
+      box-shadow: 0 8px 28px rgba(192,57,43,0.35);
+    }
+    .btn-primary:hover { box-shadow: 0 12px 36px rgba(192,57,43,0.5); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--ice);
+      border: 1px solid var(--glass-border);
+    }
+    .btn-outline:hover { background: var(--glass); border-color: var(--silver); }
+
+    /* ── SECTION BASE ─────────────────────────────── */
+    section { padding: 6rem 8vw; }
+
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 0.8rem;
+    }
+
+    h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      letter-spacing: 0.04em;
+      line-height: 1;
+      color: var(--ice);
+      margin-bottom: 1.4rem;
+    }
+
+    p { line-height: 1.75; color: var(--silver); }
+
+    /* ── OVERVIEW ─────────────────────────────────── */
+    .overview {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+      border-top: 1px solid var(--glass-border);
+    }
+
+    .overview-img {
+      position: relative;
+    }
+
+    .overview-img img {
+      width: 100%;
+      border-radius: 4px;
+      display: block;
+      filter: brightness(0.9) contrast(1.05);
+    }
+
+    .img-badge {
+      position: absolute;
+      bottom: -1.2rem;
+      right: -1.2rem;
+      background: var(--red);
+      color: #fff;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      padding: 0.6rem 1.2rem;
+      border-radius: 3px;
+    }
+
+    /* ── HOW IT WORKS ─────────────────────────────── */
+    .how {
+      background: rgba(255,255,255,0.02);
+      border-top: 1px solid var(--glass-border);
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .step {
+      position: relative;
+      padding: 2rem;
+      border: 1px solid var(--glass-border);
+      border-radius: 4px;
+      background: var(--glass);
+      transition: border-color 0.2s;
+    }
+    .step:hover { border-color: rgba(192,57,43,0.5); }
+
+    .step-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      color: rgba(192,57,43,0.2);
+      line-height: 1;
+      margin-bottom: 0.8rem;
+    }
+
+    .step h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.06em;
+      color: var(--ice);
+      margin-bottom: 0.6rem;
+    }
+
+    .step p { font-size: 0.9rem; }
+
+    /* ── COMPONENTS ───────────────────────────────── */
+    .components-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .component-card {
+      padding: 2.2rem;
+      border: 1px solid var(--glass-border);
+      border-radius: 4px;
+      background: var(--glass);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .component-card:hover { transform: translateY(-3px); border-color: rgba(184,205,216,0.3); }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(192,57,43,0.15);
+      border: 1px solid rgba(192,57,43,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.2rem;
+      font-size: 1.2rem;
+    }
+
+    .component-card h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.06em;
+      color: var(--ice);
+      margin-bottom: 0.6rem;
+    }
+
+    .component-card ul {
+      list-style: none;
+      margin-top: 1rem;
+    }
+    .component-card ul li {
+      font-size: 0.85rem;
+      color: var(--silver);
+      padding: 0.35rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .component-card ul li::before {
+      content: '—';
+      color: var(--red);
+      flex-shrink: 0;
+    }
+
+    /* ── COST ─────────────────────────────────────── */
+    .cost { border-top: 1px solid var(--glass-border); }
+
+    .cost-cards {
+      display: flex;
+      gap: 2rem;
+      margin-top: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .cost-card {
+      flex: 1;
+      min-width: 220px;
+      padding: 2.5rem;
+      border: 1px solid var(--glass-border);
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .cost-card.highlight { border-color: rgba(192,57,43,0.5); background: rgba(192,57,43,0.06); }
+
+    .cost-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--silver);
+      margin-bottom: 1rem;
+    }
+    .cost-amount {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.8rem;
+      letter-spacing: 0.04em;
+      color: var(--ice);
+      line-height: 1;
+    }
+    .cost-unit { font-size: 0.85rem; color: var(--silver); margin-top: 0.4rem; }
+
+    /* ── DOCS CTA ─────────────────────────────────── */
+    .docs-cta {
+      text-align: center;
+      padding: 7rem 8vw;
+      border-top: 1px solid var(--glass-border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .docs-cta::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(192,57,43,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .docs-cta h2 { margin-bottom: 1rem; }
+    .docs-cta p { max-width: 500px; margin: 0 auto 2.5rem; }
+
+    /* ── FOOTER ───────────────────────────────────── */
+    footer {
+      padding: 2rem 8vw;
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: rgba(184,205,216,0.5);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.1em;
+      color: var(--silver);
+    }
+
+    /* ── ANIMATIONS ───────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ───────────────────────────────── */
+    @media (max-width: 768px) {
+      .overview { grid-template-columns: 1fr; gap: 3rem; }
+      .components-grid { grid-template-columns: 1fr; }
+      .img-badge { right: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-eyebrow">Western University · Capstone Design Project</p>
+    <h1 class="hero-title">
+      Play<span>Stop</span>
+    </h1>
+    <p class="hero-sub">
+      A wireless, sound-triggered vibrating armband that empowers hearing-impaired hockey players to independently identify when a whistle has been blown and play has stopped.
+    </p>
+    <div class="hero-cta">
+      <a href="YOUR_PDF_LINK_HERE" target="_blank" class="btn btn-primary">
+        ↓ &nbsp;Download Documentation
+      </a>
+      <a href="#overview" class="btn btn-outline">Learn More</a>
+    </div>
+  </section>
+
+  <!-- OVERVIEW -->
+  <section class="overview" id="overview">
+    <div class="reveal">
+      <p class="section-label">The Project</p>
+      <h2>Empowering Every Ear</h2>
+      <p>
+        PlayStop consists of two custom-built armbands — one for the player and one for the referee. When the referee blows a whistle, the referee's armband detects the specific whistle frequency and wirelessly transmits a signal to the player's armband, triggering a distinct vibration pattern so the hearing-impaired player always knows when play has stopped.
+      </p>
+      <br/>
+      <p>
+        The two armbands communicate via ESP-NOW wireless protocol, using Seeed Studio XIAO ESP32 microcontrollers. The whole system is self-contained, rechargeable, and built to survive the rigors of competitive hockey.
+      </p>
+    </div>
+    <div class="overview-img reveal">
+      <!-- Replace src with a real photo if desired -->
+      <img src="https://via.placeholder.com/560x420/0d1f36/b8cdd8?text=PlayStop+Armbands" alt="PlayStop armbands" />
+      <div class="img-badge">Built at Western</div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how">
+    <div class="reveal">
+      <p class="section-label">System Overview</p>
+      <h2>How It Works</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <h3>Whistle Detected</h3>
+        <p>The MAX4466 Electret Microphone on the referee's armband continuously monitors ambient sound and captures the referee's whistle frequency.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">02</div>
+        <h3>FFT Analysis</h3>
+        <p>The ESP32C3 runs a Fast Fourier Transform on the audio signal to identify whether the detected frequency falls within the pre-set whistle trigger range.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">03</div>
+        <h3>Wireless Signal</h3>
+        <p>When a match is confirmed, the referee's armband transmits a signal over ESP-NOW protocol to the player's armband — no Wi-Fi or Bluetooth pairing needed.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">04</div>
+        <h3>Vibration Alert</h3>
+        <p>The player's armband vibrates 3 times (1 s on / 0.5 s off) directly against the arm, giving a clear, unmistakable tactile signal that play has stopped.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPONENTS -->
+  <section>
+    <div class="reveal">
+      <p class="section-label">Hardware</p>
+      <h2>Key Components</h2>
+    </div>
+    <div class="components-grid">
+      <div class="component-card reveal">
+        <div class="card-icon">🏒</div>
+        <h3>Player Armband</h3>
+        <p>Worn by the hearing-impaired player. Receives the wireless signal and triggers tactile feedback.</p>
+        <ul>
+          <li>Seeed Studio XIAO ESP32S3</li>
+          <li>Mini vibratory motor (2N7000 MOSFET driver)</li>
+          <li>3.7 V rechargeable Li-ion battery</li>
+          <li>3D-printed protective case + Velcro strap</li>
+        </ul>
+      </div>
+      <div class="component-card reveal">
+        <div class="card-icon">🎙️</div>
+        <h3>Referee Armband</h3>
+        <p>Worn by the referee on the wrist. Listens for the whistle and transmits the alert signal.</p>
+        <ul>
+          <li>Seeed Studio XIAO ESP32C3</li>
+          <li>MAX4466 Electret Microphone</li>
+          <li>3.7 V rechargeable Li-ion battery</li>
+          <li>3D-printed protective case + Velcro strap</li>
+        </ul>
+      </div>
+      <div class="component-card reveal">
+        <div class="card-icon">📡</div>
+        <h3>Wireless Protocol</h3>
+        <p>ESP-NOW enables direct peer-to-peer communication between the two microcontrollers without any network infrastructure.</p>
+        <ul>
+          <li>SimpleEspNowConnec library v1.2.0</li>
+          <li>esp32 board package v2.0.11</li>
+          <li>MAC-address based pairing</li>
+        </ul>
+      </div>
+      <div class="component-card reveal">
+        <div class="card-icon">⚙️</div>
+        <h3>Mechanical Design</h3>
+        <p>Both armbands are built to be durable, adjustable, and easy to maintain in a hockey environment.</p>
+        <ul>
+          <li>0.10 mm layer-height 3D prints (PLA)</li>
+          <li>23¼" adjustable Velcro straps</li>
+          <li>Sewn fabric pouch for component protection</li>
+          <li>Wi-Fi antenna routed through case wall</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- COST -->
+  <section class="cost">
+    <div class="reveal">
+      <p class="section-label">Bill of Materials</p>
+      <h2>Build Cost</h2>
+      <p>Components sourced from Digi-Key and Amazon. Prices current at time of document creation.</p>
+    </div>
+    <div class="cost-cards">
+      <div class="cost-card reveal">
+        <div class="cost-label">Player Armband</div>
+        <div class="cost-amount">$22<span style="font-size:2rem">.02</span></div>
+        <div class="cost-unit">CAD per unit</div>
+      </div>
+      <div class="cost-card reveal">
+        <div class="cost-label">Referee Armband</div>
+        <div class="cost-amount">$27<span style="font-size:2rem">.50</span></div>
+        <div class="cost-unit">CAD per unit</div>
+      </div>
+      <div class="cost-card highlight reveal">
+        <div class="cost-label">Total System</div>
+        <div class="cost-amount">$49<span style="font-size:2rem">.52</span></div>
+        <div class="cost-unit">CAD complete set</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOCS CTA -->
+  <section class="docs-cta">
+    <div class="reveal">
+      <p class="section-label">Documentation</p>
+      <h2>Full Design Documentation</h2>
+      <p>Complete build instructions, schematics, software setup, STL files, and bill of materials — everything needed to reproduce this device.</p>
+      <a href="YOUR_PDF_LINK_HERE" target="_blank" class="btn btn-primary" style="font-size:1rem; padding: 1rem 2.5rem;">
+        ↓ &nbsp;Download PDF
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">PlayStop</div>
+    <div>Empowering Every Ear · Western University</div>
+    <div>Wireless Assistive Technology for Hearing-Impaired Athletes</div>
+  </footer>
+
+  <script>
+    // Scroll-reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
